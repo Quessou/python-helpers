@@ -66,6 +66,12 @@ def argumentsValid(arg1 : str, arg2 : str) -> bool:
     return False
 
 
+def writetestcmakelistsfile_gtest(cmakelistsfile, libname : str, testdirname : str) -> bool:
+    try:
+        print("coucou")
+    except Exception as e:
+        print("lol")
+
 if __name__ == '__main__':
     if len(sys.argv) != 3:
         sys.exit("bad argument count : needs  two arguments")
@@ -79,11 +85,24 @@ if __name__ == '__main__':
         libname = sys.argv[1]
     print("args ok")
     try:
-        with cd(path):
-            os.mkdir(libname)
+        with cd(path): # Going into root src directory
+            os.mkdir(libname) # Creating a directory for the library
             with cd(libname):
-                cmakelistsfile = open("CMakeLists.txt",'w')
-                cmakelistsfile.close()
+                testDirectoryName = "test"
+                # Create library's root CMakeLists.txt file, and filling it
+                with open("CMakeLists.txt",'w') as rootcmakelistsfile:
+                    rootcmakelistsfile.write('add_subdirectory(' + libname + ')\n')
+                    rootcmakelistsfile.write('add_subdirectory(' + testDirectoryName  + ')\n')
+                os.mkdir(libname)
+                os.mkdir(testDirectoryName)
+                with cd(libname):
+                    with open("CMakeLists.txt", 'w') as libcmakelistsfile:
+                        libcmakelistsfile.write('add_library(' + libname + '\n)\n')
+                with cd(testDirectoryName):
+                    with open("CMakeLists.txt", 'w') as testcmakelistsfile:
+                        writetestcmakelistsfile_gtest(testcmakelistsfile, libname, testDirectoryName)
+
+
 
 
     except PermissionError as pe:
