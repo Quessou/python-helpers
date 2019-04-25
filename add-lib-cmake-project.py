@@ -71,4 +71,26 @@ if __name__ == '__main__':
         sys.exit("bad argument count : needs  two arguments")
     if not argumentsValid(sys.argv[1], sys.argv[2]) :
         sys.exit("invalid arguments : must give a valid path and a valid library name")
-    print("ok")
+    if os.path.isdir(sys.argv[1]) :
+        path = sys.argv[1]
+        libname = sys.argv[2]
+    else:
+        path = sys.argv[2]
+        libname = sys.argv[1]
+    print("args ok")
+    try:
+        with cd(path):
+            os.mkdir(libname)
+            with cd(libname):
+                cmakelistsfile = open("CMakeLists.txt",'w')
+                cmakelistsfile.close()
+
+
+    except PermissionError as pe:
+        sys.exit("Permission denied")
+    except FileNotFoundError as fnfe:
+        sys.exit("Directory not found")
+    except FileExistsError as fee:
+        sys.exit("Directory with this library name already exists")
+    
+
