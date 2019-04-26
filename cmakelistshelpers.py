@@ -44,29 +44,27 @@ def writesrcdircmakelistsfile(cmakelistsfile, libname: str):
 def iscmakelistspresent() -> bool:
     return os.path.isfile("CMakeLists.txt")
 
-def writeaddsubdir(libname: str):
+# TODO(mmiko) : How to handle potential multi-line directives ?
+def addsinglelinedirective(directivename : str, directive : str):
     if not iscmakelistspresent():
         print("No CMakeLists.txt in current directory")
         return;
     newrootcmlcontent = ""
     with open(CML,'r+') as projectcmakelistsfile:
-        ADD_DIR_STR = "add_subdirectory"
-
         filecontent = projectcmakelistsfile.readlines()
         filecontent.reverse()
         rfilecontent = filecontent
-        adddirfound = False
-        addsubdir = ADD_DIR_STR + "(" + libname + ")\n"
+        directivefound = False
 
-        # add add_subdirectory line
+        # add dirirective line, either after the last one of the same type if existing, or at the very end of file otherwise
         for line in rfilecontent:
-            if ADD_DIR_STR in line:
+            if directivename in line:
                 adddirfound = True
                 index = rfilecontent.index(line)
-                rfilecontent.insert(index, addsubdir)
+                rfilecontent.insert(index, directive)
                 break
         if not adddirfound:
-            rfilecontent.insert(0, addsubdir)
+            rfilecontent.insert(0, directive)
 
         rfilecontent.reverse()
         filecontent = rfilecontent
@@ -75,39 +73,18 @@ def writeaddsubdir(libname: str):
         open(CML,"w").close()
         with open(CML, "w") as rootcmlfile:
             rootcmlfile.write(newrootcmlcontent)
+
+
+def writeaddsubdir(libname: str):
+    ADD_DIR_STR = "add_subdirectory"
+    addsubdir = ADD_DIR_STR + "(" + libname + ")\n"
+    addsinglelinedirective(ADD_DIR_STR, addsubdir)
 
 def writeincludedirectory(libname: str):
-    if not iscmakelistspresent():
-        print("No CMakeLists.txt in current directory")
-        return;
-    newrootcmlcontent = ""
-    with open(CML,'r+') as projectcmakelistsfile:
-        INC_DIR_STR = "include_directories"
-        PROJ_SRC_DIR = "PROJECT_SOURCE_DIR"
-
-        filecontent = projectcmakelistsfile.readlines()
-        filecontent.reverse()
-        rfilecontent = filecontent
-        incdirfound = False
-        incdir = INC_DIR_STR + "(\"${" + PROJ_SRC_DIR + "}/" + libname + ")\n"
-        # add include_directories line
-        for line in rfilecontent:
-            if INC_DIR_STR in line:
-                incdirfound = True
-                index = rfilecontent.index(line)
-                rfilecontent.insert(index, incdir)
-                break
-        if not incdirfound:
-            rfilecontent.insert(0, incdir)
-
-        rfilecontent.reverse()
-        filecontent = rfilecontent
-        f = ""
-        newrootcmlcontent = f.join(filecontent)
-        open(CML,"w").close()
-        with open(CML, "w") as rootcmlfile:
-            rootcmlfile.write(newrootcmlcontent)
-    
+    INC_DIR_STR = "include_directories"
+    PROJ_SRC_DIR = "PROJECT_SOURCE_DIR"
+    incdir = INC_DIR_STR + "(\"${" + PROJ_SRC_DIR + "}/" + libname + ")\n"
+    addsinglelinedirective(INC_DIR_STR, incdir)
 
 
 def addlibtoproject(libname : str):
