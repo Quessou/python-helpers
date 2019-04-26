@@ -53,45 +53,7 @@ if __name__ == '__main__':
                         testfile.write("// TODO : add includes to library's headers here\n\n")
                         testfile.write("// TODO : add tests here\n")
             # Reference new library into root CMakeLists.txt
-            newrootcmlcontent = ""
-            with open(cml,'r+') as projectcmakelistsfile:
-                INC_DIR_STR = "include_directories"
-                ADD_DIR_STR = "add_subdirectory"
-                PROJ_SRC_DIR = "PROJECT_SOURCE_DIR"
-                
-                filecontent = projectcmakelistsfile.readlines()
-                filecontent.reverse()
-                rfilecontent = filecontent
-                incdirfound = False
-                adddirfound = False
-                incdir = INC_DIR_STR + "(\"${" + PROJ_SRC_DIR + "}/" + libname + ")\n"
-                addsubdir = ADD_DIR_STR + "(" + libname + ")\n"
-                # add include_directories line
-                for line in rfilecontent:
-                    if INC_DIR_STR in line:
-                        incdirfound = True
-                        index = rfilecontent.index(line)
-                        rfilecontent.insert(index, incdir)
-                        break
-                if not incdirfound:
-                   rfilecontent.insert(0, incdir)
-
-                # add add_subdirectory line
-                for line in rfilecontent:
-                    if ADD_DIR_STR in line:
-                        adddirfound = True
-                        index = rfilecontent.index(line)
-                        rfilecontent.insert(index, addsubdir)
-                        break
-                if not adddirfound:
-                   rfilecontent.insert(0, addsubdir)
-                rfilecontent.reverse()
-                filecontent = rfilecontent
-                f = ""
-                newrootcmlcontent = f.join(filecontent)
-            open("cml","w").close()
-            with open(cml, "w") as rootcmlfile:
-                rootcmlfile.write(newrootcmlcontent)
+            addlibtoproject(libname) 
     except PermissionError as pe:
         sys.exit("Permission denied")
     except FileNotFoundError as fnfe:

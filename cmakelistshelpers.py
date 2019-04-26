@@ -3,6 +3,9 @@ import sys
 import string
 
 
+CML = "CMakeLists.txt"
+
+# TODO(mmiko) : add versions of these methods that do not take a FILE into parameter
 def writetestcmakelistsfile_gtest(cmakelistsfile, libname : str, testdirname : str):
     try:
         EXC_NAME = "EXECUTABLE_NAME"
@@ -40,3 +43,76 @@ def writesrcdircmakelistsfile(cmakelistsfile, libname: str):
 
 def iscmakelistspresent() -> bool:
     return os.path.isfile("CMakeLists.txt")
+
+def writeaddsubdir(libname: str):
+    if not iscmakelistspresent():
+        print("No CMakeLists.txt in current directory")
+        return;
+    newrootcmlcontent = ""
+    with open(CML,'r+') as projectcmakelistsfile:
+        ADD_DIR_STR = "add_subdirectory"
+
+        filecontent = projectcmakelistsfile.readlines()
+        filecontent.reverse()
+        rfilecontent = filecontent
+        adddirfound = False
+        addsubdir = ADD_DIR_STR + "(" + libname + ")\n"
+
+        # add add_subdirectory line
+        for line in rfilecontent:
+            if ADD_DIR_STR in line:
+                adddirfound = True
+                index = rfilecontent.index(line)
+                rfilecontent.insert(index, addsubdir)
+                break
+        if not adddirfound:
+            rfilecontent.insert(0, addsubdir)
+
+        rfilecontent.reverse()
+        filecontent = rfilecontent
+        f = ""
+        newrootcmlcontent = f.join(filecontent)
+        open(CML,"w").close()
+        with open(CML, "w") as rootcmlfile:
+            rootcmlfile.write(newrootcmlcontent)
+
+def writeincludedirectory(libname: str):
+    if not iscmakelistspresent():
+        print("No CMakeLists.txt in current directory")
+        return;
+    newrootcmlcontent = ""
+    with open(CML,'r+') as projectcmakelistsfile:
+        INC_DIR_STR = "include_directories"
+        PROJ_SRC_DIR = "PROJECT_SOURCE_DIR"
+
+        filecontent = projectcmakelistsfile.readlines()
+        filecontent.reverse()
+        rfilecontent = filecontent
+        incdirfound = False
+        incdir = INC_DIR_STR + "(\"${" + PROJ_SRC_DIR + "}/" + libname + ")\n"
+        # add include_directories line
+        for line in rfilecontent:
+            if INC_DIR_STR in line:
+                incdirfound = True
+                index = rfilecontent.index(line)
+                rfilecontent.insert(index, incdir)
+                break
+        if not incdirfound:
+            rfilecontent.insert(0, incdir)
+
+        rfilecontent.reverse()
+        filecontent = rfilecontent
+        f = ""
+        newrootcmlcontent = f.join(filecontent)
+        open(CML,"w").close()
+        with open(CML, "w") as rootcmlfile:
+            rootcmlfile.write(newrootcmlcontent)
+    
+
+
+def addlibtoproject(libname : str):
+    if not iscmakelistspresent():
+        print("No CMakeLists.txt in current directory")
+        return;
+    writeincludedirectory(libname)
+    writeaddsubdir(libname)
