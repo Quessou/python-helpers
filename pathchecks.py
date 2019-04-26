@@ -50,8 +50,6 @@ def is_pathname_valid(pathname: str) -> bool:
 def isValidFilename(filename : str) -> bool:
     validchars = set(string.ascii_letters + string.digits + string.punctuation.replace("/",""))
     fn = set(filename)
-    print(validchars)
-    print(fn)
     return filename != "." and filename != "/" and fn.issubset(validchars)
 
 
