@@ -36,17 +36,16 @@ if __name__ == '__main__':
                 testdirname = "test"
                 cml = "CMakeLists.txt"
                 # Create library's root CMakeLists.txt file, and filling it
-                with open(cml,'w') as rootcmakelistsfile:
-                    writelibraryrootcmakelistsfile(rootcmakelistsfile, srcdirname, testdirname)    
+                writelibraryrootcmakelistsfile(srcdirname, testdirname)    
                 # Create source and test directories
                 os.mkdir(srcdirname)
                 os.mkdir(testdirname)
                 with cd(srcdirname):
-                    with open(cml, 'w') as libcmakelistsfile:
-                       writesrcdircmakelistsfile(libcmakelistsfile, libname) 
+                    writesrcdircmakelistsfile(libname) 
                 with cd(testdirname):
-                    with open(cml, 'w') as testcmakelistsfile:
-                        writetestcmakelistsfile_gtest(testcmakelistsfile, libname, testdirname)
+                    # Generate CMakeLists.txt for a test project
+                    writetestcmakelistsfile_gtest(libname, testdirname)
+                    # Generate minimalistic source test file
                     defaulttestfilename = testdirname.lower() + libname.lower() + ".cpp"
                     with open(defaulttestfilename, 'w')  as testfile:
                         testfile.write("#include <gtest/gtest.h>\n")

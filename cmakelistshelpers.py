@@ -5,8 +5,7 @@ import string
 
 CML = "CMakeLists.txt"
 
-# TODO(mmiko) : add versions of these methods that do not take a FILE into parameter
-def writetestcmakelistsfile_gtest(cmakelistsfile, libname : str, testdirname : str):
+def __writetestcmakelistsfile_gtest__(cmakelistsfile, libname : str, testdirname : str):
     try:
         EXC_NAME = "EXECUTABLE_NAME"
         testexecutablename = testdirname + libname.capitalize()
@@ -25,7 +24,7 @@ def writetestcmakelistsfile_gtest(cmakelistsfile, libname : str, testdirname : s
         print("Failed writing CMakeLists.txt for unit tests directory")
         raise e
 
-def writelibraryrootcmakelistsfile(cmakelistsfile, srcdirname : str, testdirname : str):
+def __writelibraryrootcmakelistsfile__(cmakelistsfile, srcdirname : str, testdirname : str):
     try:
         cmakelistsfile.write('add_subdirectory(' + srcdirname + ')\n')
         cmakelistsfile.write('add_subdirectory(' + testdirname  + ')\n')
@@ -33,7 +32,7 @@ def writelibraryrootcmakelistsfile(cmakelistsfile, srcdirname : str, testdirname
         print("Failed writing default CMakeLists.txt for library's root directory")
         raise e
 
-def writesrcdircmakelistsfile(cmakelistsfile, libname: str):
+def __writesrcdircmakelistsfile__(cmakelistsfile, libname: str):
     try:
         cmakelistsfile.write('add_library(' + libname + '\n)\n')
     except Exception as e:
@@ -43,6 +42,19 @@ def writesrcdircmakelistsfile(cmakelistsfile, libname: str):
 
 def iscmakelistspresent() -> bool:
     return os.path.isfile("CMakeLists.txt")
+
+
+def writetestcmakelistsfile_gtest(libname : str, testdirname : str):
+    with open(CML, "w") as cmakelists:
+        __writetestcmakelistsfile_gtest__(cmakelists, libname, testdirname)
+
+def writelibraryrootcmakelistsfile(srcdirname : str, testdirname : str):
+    with open(CML, "w") as cmakelists:
+        __writelibraryrootcmakelistsfile__(cmakelists, srcdirname, testdirname)
+
+def writesrcdircmakelistsfile(libname: str):
+    with open(CML, "w") as cmakelists:
+        __writesrcdircmakelistsfile__(cmakelists, libname)
 
 # TODO(mmiko) : How to handle potential multi-line directives ?
 def addsinglelinedirective(directivename : str, directive : str):
