@@ -45,6 +45,12 @@ if __name__ == '__main__':
                 with cd(testdirname):
                     with open(cml, 'w') as testcmakelistsfile:
                         writetestcmakelistsfile_gtest(testcmakelistsfile, libname, testdirname)
+                    defaulttestfilename = testdirname.lower() + libname.lower() + ".cpp"
+                    with open(defaulttestfilename, 'w')  as testfile:
+                        # TODO(mmiko) : complete me
+                        testfile.write("#include <gtest/gtest.h>\n")
+                        testfile.write("// TODO : add includes to library's headers here\n\n")
+                        testfile.write("// TODO : add tests here\n")
     except PermissionError as pe:
         sys.exit("Permission denied")
     except FileNotFoundError as fnfe:
