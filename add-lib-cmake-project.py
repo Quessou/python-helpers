@@ -51,5 +51,7 @@ if __name__ == '__main__':
         sys.exit("Directory not found")
     except FileExistsError as fee:
         sys.exit("Directory with this library name already exists")
+    except Exception as e:
+        sys.exit("Failed")
     print("Done")    
 
