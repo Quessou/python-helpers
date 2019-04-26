@@ -15,11 +15,36 @@ def argumentsValid(arg1 : str, arg2 : str) -> bool:
     return False
 
 
-def writetestcmakelistsfile_gtest(cmakelistsfile, libname : str, testdirname : str) -> bool:
+def writetestcmakelistsfile_gtest(cmakelistsfile, libname : str, testdirname : str):
     try:
-        print("coucou")
+        EXC_NAME = "EXECUTABLE_NAME"
+        testexecutablename = testdirname + libname.capitalize()
+        # Set variable EXECUTABLE_NAME
+        cmakelistsfile.write("set(" + EXC_NAME + ' ' + testexecutablename + ')\n\n') 
+        # Declare executable
+        cmakelistsfile.write("add_executable(${" + EXC_NAME + "} " + testexecutablename.lower() + ".cpp)\n\n"  )
+        # Add dependencies
+        cmakelistsfile.write("target_link_libraries(${" + EXC_NAME + "} " + libname +")\n")
+        cmakelistsfile.write("target_link_libraries(${" + EXC_NAME + "}  gtest_main gtest pthread)\n")
+        # Add test
+        cmakelistsfile.write("add_test(\n")
+        cmakelistsfile.write("\tNAME " + testexecutablename + "\n")
+        cmakelistsfile.write("\tCOMMAND ${CMAKE_CURRENT_BINARY_DIR}/${"+EXC_NAME+"} --gtest_output=xml:${CMAKE_BINARY_DIR}/testResults/testResults_${"+EXC_NAME+"}.xml\n\t)\n")
     except Exception as e:
         print("lol")
+
+def writelibraryrootcmakelistsfile(cmakelistsfile, srcdirname : str, testdirname : str):
+    try:
+        rootcmakelistsfile.write('add_subdirectory(' + srcdirname + ')\n')
+        rootcmakelistsfile.write('add_subdirectory(' + testdirname  + ')\n')
+    except Exception as e:
+        sys.exit("Failed writing default CMakeLists.txt for library's root directory")
+
+def writesrcdircmakelistsfile(cmakelistsfile, libname: str):
+    try:
+        libcmakelistsfile.write('add_library(' + libname + '\n)\n')
+    except Exception as e:
+        sys.exit("Failed writing default CMakeLists.txt for source code's directory")
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
@@ -37,19 +62,21 @@ if __name__ == '__main__':
         with cd(path): # Going into root src directory
             os.mkdir(libname) # Creating a directory for the library
             with cd(libname):
-                testDirectoryName = "test"
+                srcdirname = "src"
+                testdirname = "test"
+                cml = "CMakeLists.txt"
                 # Create library's root CMakeLists.txt file, and filling it
-                with open("CMakeLists.txt",'w') as rootcmakelistsfile:
-                    rootcmakelistsfile.write('add_subdirectory(' + libname + ')\n')
-                    rootcmakelistsfile.write('add_subdirectory(' + testDirectoryName  + ')\n')
-                os.mkdir(libname)
-                os.mkdir(testDirectoryName)
-                with cd(libname):
-                    with open("CMakeLists.txt", 'w') as libcmakelistsfile:
-                        libcmakelistsfile.write('add_library(' + libname + '\n)\n')
-                with cd(testDirectoryName):
-                    with open("CMakeLists.txt", 'w') as testcmakelistsfile:
-                        writetestcmakelistsfile_gtest(testcmakelistsfile, libname, testDirectoryName)
+                with open(cml,'w') as rootcmakelistsfile:
+                    writelibraryrootcmakelistsfile(rootcmakelistsfile, srcdirname, testdirname)    
+                # Create source and test directories
+                os.mkdir(srcdirname)
+                os.mkdir(testdirname)
+                with cd(srcdirname):
+                    with open(cml, 'w') as libcmakelistsfile:
+                       writesrcdircmakelistsfile(libcmakelistsfile, libname) 
+                with cd(testdirname):
+                    with open(cml, 'w') as testcmakelistsfile:
+                        writetestcmakelistsfile_gtest(testcmakelistsfile, libname, testdirname)
 
 
 

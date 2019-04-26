@@ -22,3 +22,5 @@ class cd:
     def __exit__(self, etype, value, traceback):
         changedir(self.__savedDir)
 
+
+# TODO(mmiko) : write tests here

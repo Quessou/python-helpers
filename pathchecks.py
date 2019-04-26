@@ -53,3 +53,6 @@ def isValidFilename(filename : str) -> bool:
     print(validchars)
     print(fn)
     return filename != "." and filename != "/" and fn.issubset(validchars)
+
+
+# TODO(mmiko) : Write tests here
