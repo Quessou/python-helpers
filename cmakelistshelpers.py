@@ -13,7 +13,7 @@ def writetestcmakelistsfile_gtest(cmakelistsfile, libname : str, testdirname : s
         cmakelistsfile.write("add_executable(${" + EXC_NAME + "} " + testexecutablename.lower() + ".cpp)\n\n"  )
         # Add dependencies
         cmakelistsfile.write("target_link_libraries(${" + EXC_NAME + "} " + libname +")\n")
-        cmakelistsfile.write("target_link_libraries(${" + EXC_NAME + "}  gtest_main gtest pthread)\n")
+        cmakelistsfile.write("target_link_libraries(${" + EXC_NAME + "} gtest_main gtest pthread)\n")
         # Add test
         cmakelistsfile.write("add_test(\n")
         cmakelistsfile.write("\tNAME " + testexecutablename + "\n")
@@ -36,3 +36,7 @@ def writesrcdircmakelistsfile(cmakelistsfile, libname: str):
     except Exception as e:
         print("Failed writing default CMakeLists.txt for source code's directory")
         raise e
+
+
+def iscmakelistspresent() -> bool:
+    return os.path.isfile("CMakeLists.txt")
