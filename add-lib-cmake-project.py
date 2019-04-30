@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/python3
 
 
 from utils.changedir import cd
@@ -15,17 +15,23 @@ def argumentsValid(arg1 : str, arg2 : str) -> bool:
         return True
     return False
 
-if __name__ == '__main__':
-    if len(sys.argv) != 3:
+def handleArguments(argv : list): #TODO(mmiko) : check if it's possible to specify a return type when we have multiple return values
+    if len(argv) != 3: # TODO(mmiko) : handle here the case where the user does not give enough arguments, and maybe ask him to input them interactively
         sys.exit("bad argument count : needs  two arguments")
-    if not argumentsValid(sys.argv[1], sys.argv[2]) :
+    if not argumentsValid(argv[1], argv[2]) :
         sys.exit("invalid arguments : must give a valid path and a valid library name")
-    if os.path.isdir(sys.argv[1]) :
-        path = sys.argv[1]
-        libname = sys.argv[2]
+    if os.path.isdir(argv[1]) :
+        path = argv[1]
+        libname = argv[2]
     else:
-        path = sys.argv[2]
-        libname = sys.argv[1]
+        path = argv[2]
+        libname = argv[1]
+
+    return path, libname
+
+if __name__ == '__main__':
+    # Arguments handling
+    path, libname = handleArguments(sys.argv)
     try:
         with cd(path): # Going into root src directory
             if not iscmakelistspresent():
