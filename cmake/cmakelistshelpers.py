@@ -2,6 +2,7 @@ import os
 import sys
 import string
 
+from utils.changedir import cd
 
 CML = "CMakeLists.txt"
 
@@ -105,3 +106,7 @@ def addlibtoproject(libname : str):
         return;
     writeincludedirectory(libname)
     writeaddsubdir(libname)
+
+
+if __name__ == "__main__":
+    print("coucou")

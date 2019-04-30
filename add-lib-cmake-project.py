@@ -1,12 +1,12 @@
 #!/bin/python3
 
 
-from changedir import cd
+from utils.changedir import cd
 import sys
 import string
 import errno, os
-from pathchecks import is_pathname_valid, isValidFilename 
-from cmakelistshelpers import *
+from utils.pathchecks import is_pathname_valid, isValidFilename 
+from cmake.cmakelistshelpers import *
 
 def argumentsValid(arg1 : str, arg2 : str) -> bool:
     if (os.path.isdir(arg1) and isValidFilename(arg2) and is_pathname_valid(arg1 + arg2)):
