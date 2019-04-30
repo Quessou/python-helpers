@@ -96,7 +96,7 @@ def writeaddsubdir(libname: str):
 def writeincludedirectory(libname: str):
     INC_DIR_STR = "include_directories"
     PROJ_SRC_DIR = "PROJECT_SOURCE_DIR"
-    incdir = INC_DIR_STR + "(\"${" + PROJ_SRC_DIR + "}/" + libname + ")\n"
+    incdir = INC_DIR_STR + "(\"${" + PROJ_SRC_DIR + "}/" + libname + "\")\n"
     addsinglelinedirective(INC_DIR_STR, incdir)
 
 
