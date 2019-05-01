@@ -38,7 +38,8 @@ if __name__ == '__main__':
                 sys.exit("Project directory does not contain CMakeLists.txt")
             os.mkdir(libname) # Creating a directory for the library
             with cd(libname):
-                srcdirname = "src"
+                # Note : we use libname as dirname here, or else C++'s #includes are really ugly, referencing "src" everywhere.
+                srcdirname = libname
                 testdirname = "test"
                 cml = "CMakeLists.txt"
                 # Create library's root CMakeLists.txt file, and filling it
@@ -69,5 +70,5 @@ if __name__ == '__main__':
         sys.exit("Index out of bounds exception")
     except Exception as e:
         sys.exit("Failed : " + e)
-    print("Done")    
+    print("Done")
 
