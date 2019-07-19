@@ -1,6 +1,6 @@
 from abc import *
 
-from utils.changedir import cd
+from pyfsutils.changedir import cd
 
 class Project(metaclass = ABCmeta) :
     __slots__ = ["projectPath"]

@@ -2,7 +2,7 @@ import os
 import sys
 import string
 
-from utils.changedir import cd
+from pyfsutils.changedir import cd
 
 CML = "CMakeLists.txt"
 
