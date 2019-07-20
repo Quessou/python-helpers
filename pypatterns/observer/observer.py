@@ -8,7 +8,7 @@ class observer(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def onnotification(self, event):
+    def onnotification(self, observed, event):
         pass
 
 
@@ -17,7 +17,7 @@ class dummyobserver(observer):
     def __init__(self):
         self.value = "ok"
 
-    def onnotification(self, event):
+    def onnotification(self, observed, event):
         print(str(event) + " " + self.value)
 
 

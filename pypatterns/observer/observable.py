@@ -29,5 +29,4 @@ class observable:
 
     def notifyobservers(self, event):
         for obs in self.observers:
-            # TODO: add self in the API
-            obs.onnotification(event) 
+            obs.onnotification(self, event) 
