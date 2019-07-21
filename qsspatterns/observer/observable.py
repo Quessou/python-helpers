@@ -2,7 +2,7 @@ from abc import *
 
 import logging
 
-from pyinspect.stackutils import fnname
+from qssinspect.stackutils import fnname
 
 class observable:
     def __init__(self):

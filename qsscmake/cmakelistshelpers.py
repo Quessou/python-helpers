@@ -2,7 +2,7 @@ import os
 import sys
 import string
 
-from pyfsutils.changedir import cd
+from qssfsutils.changedir import cd
 
 CML = "CMakeLists.txt"
 
@@ -109,4 +109,5 @@ def addlibtoproject(libname : str):
 
 
 if __name__ == "__main__":
+    # TODO: add tests
     print("coucou")

@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
 
-from pyfsutils.changedir import cd
+from qssfsutils.changedir import cd
 import sys
 import string
 import errno, os
-from pyfsutils.pathchecks import is_pathname_valid, isValidFilename 
-from pycmake.cmakelistshelpers import *
+from qssfsutils.pathchecks import is_pathname_valid, isValidFilename 
+from qsscmake.cmakelistshelpers import *
 
 def argumentsValid(arg1 : str, arg2 : str) -> bool:
     if (os.path.isdir(arg1) and isValidFilename(arg2) and is_pathname_valid(arg1 + arg2)):

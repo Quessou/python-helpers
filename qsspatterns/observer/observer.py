@@ -1,7 +1,7 @@
 from abc import *
 import logging
 
-from pyinspect.stackutils import fnname
+from qssinspect.stackutils import fnname
 
 class observer(metaclass=ABCMeta):
     def __init__(self):
@@ -22,7 +22,7 @@ class dummyobserver(observer):
 
 
 if __name__ == "__main__":
-    from pypatterns.observer import observable
+    from qsspatterns.observer import observable
     
     o1 = observable.observable()
     do1 = dummyobserver()
