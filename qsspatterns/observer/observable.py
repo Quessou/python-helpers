@@ -20,7 +20,7 @@ class observable:
             logging.info(fnname() + 'Trying to add an observer already registered')
 
     def unregister(self, observer):
-        if self.observers.contains(observer):
+        if observer in self.observers:
             self.observers.remove(observer)
             return True
         else:
