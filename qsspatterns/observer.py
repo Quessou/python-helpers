@@ -2,13 +2,13 @@ from abc import *
 import logging
 from qssinspect.stackutils import fnname
 
-class observable:
+class Observable:
     def __init__(self):
         self.observers = []
 
     def register(self, observer):
         if observer not in self.observers:
-            fn = getattr(observer, 'onnotification', None)
+            fn = getattr(observer, 'on_notification', None)
             if not fn:
                 logging.warning(fnname() + "register an observer which does not have onnotification method : " + observer.repr)
                 return False
@@ -27,49 +27,49 @@ class observable:
 
     def notifyobservers(self, event):
         for obs in self.observers:
-            obs.onnotification(self, event)
+            obs.on_notification(self, event)
 
 
-class observer(metaclass=ABCMeta):
+class Observer(metaclass=ABCMeta):
     def __init__(self):
         pass
 
     @abstractmethod
-    def onnotification(self, observed, event):
+    def on_notification(self, observed, event):
         pass
 
 
-class dummyobserver(observer):
+class DummyObserver(Observer):
     __slots__=["value"]
     def __init__(self):
-        observer.__init__(self)
+        Observer.__init__(self)
         self.value = "ok"
 
-    def onnotification(self, observed, event):
+    def on_notification(self, observed, event):
         print(str(event) + " " + self.value)
 
 
 def default_callback(_, observed, event):
     print(repr(observed) + " : " + repr(event))
 
-class callbackobserver(observer):
+class CallbackObserver(Observer):
     _DEFAULT_CALLBACK = default_callback
 
     def __init__(self):
-        observer.__init__(self)
+        Observer.__init__(self)
         self.notification_callback = self._DEFAULT_CALLBACK
 
-    def onnotification(self, observed, event):
+    def on_notification(self, observed, event):
         self.notification_callback(observed, event)
 
 if __name__ == "__main__":
 
-    o1 = observable()
-    do1 = dummyobserver()
+    o1 = Observable()
+    do1 = DummyObserver()
     o1.register(do1)
     o1.notifyobservers(1)
 
     o1.unregister(do1)
-    cbo = callbackobserver()
+    cbo = CallbackObserver()
     o1.register(cbo)
     o1.notifyobservers(2)
